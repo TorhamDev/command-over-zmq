@@ -1,0 +1,14 @@
+{
+    "editor.formatOnSave": true, // Optional: Enable formatting/sorting on save
+    "editor.defaultFormatter": null, // Let Python extension handle formatting
+
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff", // Use the Python extension formatter
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit" // Explicitly tell VS Code to organize imports on save
+        }
+        // You can add isort specific args here if needed,
+        // but the default behavior is usually sufficient
+        // "python.sortImports.args": ["--profile", "black"]
+    }
+}
