@@ -8,9 +8,9 @@ context = zmq.asyncio.Context()
 msg = """
 {
     "command_type":"os",
-    "command_name":["ls"],
+    "command_name":"ls",
     "parameters": [
-        "~/p",
+        "/home/torham/p/",
         "-a"
     ]
 

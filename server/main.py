@@ -3,7 +3,7 @@ import json
 
 import zmq
 import zmq.asyncio
-from modules.utils import validate_input
+from modules.utils import run_os_command, validate_input
 
 context = zmq.asyncio.Context()
 
@@ -13,11 +13,22 @@ async def server():
     socket.bind("tcp://*:5555")
 
     while True:
-        recved = validate_input(await socket.recv())
+        recved = await validate_input(await socket.recv())
         if type(recved) is tuple and recved[0] is False:
             response = {"status": "error", "errors": recved[1]}
+            await socket.send(json.dumps(response).encode())
+            continue
 
-        #  Send reply back to client
+        excute_result = await run_os_command(
+            command=recved.command_name, parameters=recved.parameters
+        )
+        response = {
+            "status": "success",
+            "command_type": recved.command_type,
+            "given_command": recved.command_name,
+            "result": excute_result["stdout"],
+            "error": excute_result["stderr"],
+        }
         await socket.send(json.dumps(response).encode())
 
 
