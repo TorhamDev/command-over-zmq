@@ -1,9 +1,19 @@
 import asyncio
+from typing import (
+    List,
+)
+
 import zmq
 import zmq.asyncio
-
+from pydantic import BaseModel
 
 context = zmq.asyncio.Context()
+
+
+class CommandInput(BaseModel):
+    command_type: str
+    command_name: str
+    parameters: List[str]
 
 
 async def server():
@@ -12,8 +22,8 @@ async def server():
 
     while True:
         #  Wait for next request from client
-        message = await socket.recv()
-        print("Received request: %s" % message)
+        message = CommandInput.model_validate_json(await socket.recv())
+        print(message)
 
         #  Send reply back to client
         await socket.send(b"World")
