@@ -5,6 +5,7 @@ description = "A clinet and server to run OS commands over socket using ZeroMQ"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiofile>=3.9.0",
     "pydantic>=2.11.4",
     "pyzmq>=26.4.0",
 ]
