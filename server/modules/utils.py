@@ -43,6 +43,7 @@ async def run_os_command(command: str, parameters: list[str]) -> dict:
         error_msg = f"command '{command}' not found."
         print(error_msg)
         return {
+            "status": "error",
             "command": command,
             "parameters": parameters,
             "stdout": "",
@@ -55,6 +56,7 @@ async def run_os_command(command: str, parameters: list[str]) -> dict:
     returncode = process.returncode
 
     command_result = {
+        "status": "success",
         "command": command,
         "parameters": parameters,
         "return_code": returncode,

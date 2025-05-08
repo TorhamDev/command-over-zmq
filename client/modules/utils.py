@@ -2,6 +2,7 @@ import json
 
 from aiofile import async_open
 from modules.models import MultiCommands, SingleCommand
+from rich import print
 
 
 async def read_commands_file(file_path: str) -> MultiCommands | SingleCommand:
@@ -15,3 +16,17 @@ async def read_commands_file(file_path: str) -> MultiCommands | SingleCommand:
         return SingleCommand.model_validate(commands)
 
     return MultiCommands.model_validate({"command_list": commands})
+
+
+async def display_result(result: dict) -> None:
+    full_command = f"{result['given_command']} {' '.join(result['parameters'])}"
+    if result["status"] == "success":
+        print("[green]--------------- Successful ---------------[/green]")
+        print(f"[yellow]Command:[/yellow] [bold]{full_command}[/bold]")
+        print(f"[yellow]Type:[/yellow] {result['command_type']}")
+        print(f"[yellow]Result:[/yellow]\n{result['result']}")
+    elif result["status"] == "error":
+        print("[red]--------------- Error ---------------[/red]")
+        print(f"[yellow]Command:[/yellow] [bold]{full_command}[/bold]")
+        print(f"[yellow]Type:[/yellow] {result['command_type']}")
+        print(f"[red]Error[/red]: [bold]{result['error']}[/bold]")
