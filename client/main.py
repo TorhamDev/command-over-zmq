@@ -11,6 +11,14 @@ context = zmq.asyncio.Context()
 
 
 async def client(file_path: str, address: str):
+    """
+    The command-over-zmq client, will handle seding commands and showing the response result.
+
+    Args:
+        file_path: the commands file path, have to be json file, can be a list or a single json data (read test.json)
+        address: the command-over-zmq server address in tcp:// protocol e.g: tcp://localhost:5555
+
+    """
     server_address = address
     print(f"Loading {file_path}")
     commands = await read_commands_file(file_path=file_path)
@@ -53,6 +61,4 @@ if __name__ == "__main__":
     asyncio.run(client(file_path=args.file, address=args.address))
 
 
-# TODO: Read command from file
-# TODO: add rich lib and make output better
-# TODO: Allow multi command excute
+# TODO: error handling in loading command from file

@@ -6,6 +6,16 @@ from rich import print
 
 
 async def read_commands_file(file_path: str) -> MultiCommands | SingleCommand:
+    """
+    Read and send commands from json file and recive its response.
+
+    Args:
+        file_path: commands json file path
+
+    Returns:
+        MultiCommands: if we have more than 1 command in json file
+        SingleCommand: if only one command is in json file
+    """
     # aiofile dosent do really Async it use threadpool.
     async with async_open(file_path, mode="r") as f:
         commands = await f.read()

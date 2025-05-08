@@ -9,6 +9,10 @@ context = zmq.asyncio.Context()
 
 
 async def worker():
+    """
+    The worker who will handle recive response and sending reply to it.
+
+    """
     socket = context.socket(zmq.REP)
     socket.connect("tcp://localhost:5554")
 
@@ -34,6 +38,13 @@ async def worker():
 
 
 async def broker():
+    """
+    The borker that will allow many workers work as a unit
+
+    input: Font-End --> Broker --> Selected Worker
+    output: Selected Worker --> Broker --> Front-End
+
+    """
     frontend = context.socket(zmq.ROUTER)
     frontend.bind("tcp://*:5555")
 
@@ -47,14 +58,14 @@ async def broker():
     while True:
         events = dict(await poller.poll())
 
-        print(events.items())
-
         if frontend in events:
             msg = await frontend.recv_multipart()
+            print(f"Snding {msg} to backend")
             await backend.send_multipart(msg)
 
         if backend in events:
             msg = await backend.recv_multipart()
+            print(f"Snding {msg} to frontend")
             await frontend.send_multipart(msg)
 
 
@@ -73,6 +84,5 @@ async def main():
 
 asyncio.run(main())
 
-# TODO: command timeout
 # TODO: add whitelist
 # TODO: add test
