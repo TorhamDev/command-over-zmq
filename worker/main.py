@@ -8,9 +8,9 @@ from modules.utils import run_os_command, validate_input
 context = zmq.asyncio.Context()
 
 
-async def server():
+async def worker():
     socket = context.socket(zmq.REP)
-    socket.connect("tcp://localhost:8888")
+    socket.connect("tcp://localhost:5554")
 
     while True:
         recved = await validate_input(await socket.recv())
@@ -35,10 +35,10 @@ async def server():
 
 async def broker():
     frontend = context.socket(zmq.ROUTER)
-    frontend.bind("tcp://*:8000")
+    frontend.bind("tcp://*:5555")
 
     backend = context.socket(zmq.DEALER)
-    backend.bind("tcp://*:8888")
+    backend.bind("tcp://*:5554")
 
     poller = zmq.asyncio.Poller()
     poller.register(frontend, zmq.POLLIN)
@@ -64,8 +64,8 @@ async def main():
 
     # Launch multiple independent workers
     worker_tasks = [
-        asyncio.create_task(server())
-        for _ in range(5)  # You can tune this number
+        asyncio.create_task(worker())
+        for _ in range(8)  # You can tune this number
     ]
 
     await asyncio.gather(broker_task, *worker_tasks)
@@ -73,5 +73,6 @@ async def main():
 
 asyncio.run(main())
 
+# TODO: command timeout
 # TODO: add whitelist
 # TODO: add test
