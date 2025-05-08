@@ -17,7 +17,7 @@ async def worker():
     socket.connect("tcp://localhost:5554")
 
     while True:
-        recved = await validate_input(await socket.recv())
+        recved = validate_input(await socket.recv())
         if type(recved) is tuple and recved[0] is False:
             response = {"status": "error", "errors": recved[1]}
             await socket.send(json.dumps(response).encode())
@@ -83,6 +83,3 @@ async def main():
 
 
 asyncio.run(main())
-
-# TODO: add whitelist
-# TODO: add test
