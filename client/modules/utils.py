@@ -2,6 +2,7 @@ import json
 
 from aiofile import async_open
 from modules.models import MultiCommands, SingleCommand
+from pydantic import ValidationError
 from rich import print
 
 
@@ -20,15 +21,29 @@ async def read_commands_file(file_path: str) -> MultiCommands | SingleCommand:
     async with async_open(file_path, mode="r") as f:
         commands = await f.read()
 
+    print(f"[yellow]Loading[/yellow] {file_path}")
     commands = json.loads(commands)
+    try:
+        if type(commands) is dict:
+            return SingleCommand.model_validate(commands)
 
-    if type(commands) is dict:
-        return SingleCommand.model_validate(commands)
-
-    return MultiCommands.model_validate({"command_list": commands})
+        return MultiCommands.model_validate({"command_list": commands})
+    except ValidationError as e:
+        print("[red] ------ Error ------ [/red]")
+        print(f"[yellow]Cannot load[/yellow] {file_path}\n")
+        print(f"[red]Errors[/red]: {e.json()}")
+        quit(-1)
 
 
 async def display_result(result: dict) -> None:
+    """
+    Display command to user in terminal via rich lib.
+
+    Args:
+        result: the result from command-over-zmq server
+
+    """
+
     full_command = f"{result['given_command']} {' '.join(result['parameters'])}"
     if result["status"] == "success":
         print("[green]--------------- Successful ---------------[/green]")
