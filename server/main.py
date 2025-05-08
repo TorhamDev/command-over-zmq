@@ -10,7 +10,7 @@ context = zmq.asyncio.Context()
 
 async def server():
     socket = context.socket(zmq.REP)
-    socket.connect("tcp://localhost:5554")
+    socket.connect("tcp://localhost:8888")
 
     while True:
         recved = await validate_input(await socket.recv())
@@ -35,10 +35,10 @@ async def server():
 
 async def broker():
     frontend = context.socket(zmq.ROUTER)
-    frontend.bind("tcp://*:5555")
+    frontend.bind("tcp://*:8000")
 
     backend = context.socket(zmq.DEALER)
-    backend.bind("tcp://*:5554")
+    backend.bind("tcp://*:8888")
 
     poller = zmq.asyncio.Poller()
     poller.register(frontend, zmq.POLLIN)
@@ -59,7 +59,16 @@ async def broker():
 
 
 async def main():
-    await asyncio.gather(asyncio.create_task(broker()), asyncio.create_task(server()))
+    # Launch broker once
+    broker_task = asyncio.create_task(broker())
+
+    # Launch multiple independent workers
+    worker_tasks = [
+        asyncio.create_task(server())
+        for _ in range(5)  # You can tune this number
+    ]
+
+    await asyncio.gather(broker_task, *worker_tasks)
 
 
 asyncio.run(main())
