@@ -1,5 +1,0 @@
-{
-  "command_type": "os",
-  "command_name": "sleep",
-  "parameters": ["20"]
-}
