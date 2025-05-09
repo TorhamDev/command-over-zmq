@@ -115,6 +115,8 @@ This code was written as part of a timed technical interview task with limited s
 
 4- Testing using `pytest`
 
+5- Dockerize worker
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0 License - see the [LICENSE](./LICENSE) file for details.
