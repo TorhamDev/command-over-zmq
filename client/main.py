@@ -63,6 +63,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     asyncio.run(client(file_path=args.file, address=args.address))
-
-
-# TODO: error handling in loading command from file
