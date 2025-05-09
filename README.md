@@ -5,11 +5,11 @@
 
 ## 📚 Table of Contents
 
-- [About](#📝-about)
-- [Features](#🚀-features)
-- [Requirements](#📦-requirements)
-- [How to Run](#🛠️-how-to-run)
-- [Interview Notes](#🙋-interview-notes)
+- [About](#-about)
+- [Features](#-features)
+- [Requirements](#-requirements)
+- [How to Run](#-how-to-run)
+- [Interview Notes](#-interview-notes)
 - [License](#license)
 
 ---
