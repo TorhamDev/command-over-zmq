@@ -103,6 +103,18 @@ python client.py -f commands.json -a tcp://localhost:5555
 
 use `client.py --help` to see help.
 
+
+### via Docker
+build with:
+```bash
+docker build -t worker .
+```
+
+run your Docker container
+```bash
+docker run -p 5554:5554 worker
+```
+
 ## 🙋 Interview Notes
 
 This code was written as part of a timed technical interview task with limited scope. While functional and modular, it can be expanded with:
